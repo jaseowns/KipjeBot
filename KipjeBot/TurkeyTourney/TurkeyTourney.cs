@@ -12,7 +12,7 @@ using KipjeBot.GameTickPacket;
 
 namespace AerialExample
 {
-    public class AerialExample : Bot
+    public class TurkeyTourney : Bot
     {
         private GameInfo gameInfo;
         private FieldInfo fieldInfo;
@@ -23,7 +23,7 @@ namespace AerialExample
         private float timeout = 0;
         private Random random = new Random();
 
-        public AerialExample(string botName, int botTeam, int botIndex) : base(botName, botTeam, botIndex)
+        public TurkeyTourney(string botName, int botTeam, int botIndex) : base(botName, botTeam, botIndex)
         {
             gameInfo = new GameInfo(botIndex, botTeam, botName);
             fieldInfo = new FieldInfo(GetFieldInfo());

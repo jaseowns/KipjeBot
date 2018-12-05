@@ -4,6 +4,8 @@ using System.Numerics;
 using RLBotDotNet;
 
 using KipjeBot.Utility;
+using RLBotDotNet.GameState;
+using KipjeBot.Helpers;
 
 namespace KipjeBot
 {
@@ -65,7 +67,35 @@ namespace KipjeBot
 
             Name = car.Name;
             Team = car.Team;
-        } 
+        }
+
+        public Car(CarState carState, string name, int team)
+        {
+            var car = carState.PhysicsState;
+            Position = car.Location.ToVector3();
+            Velocity = car.Velocity.ToVector3();
+            // Rotation = car.Rotation.ToVector3();
+            AngularVelocity = car.AngularVelocity.ToVector3();
+
+            Forward = Vector3.Transform(Vector3.UnitX, Rotation);
+            Left = Vector3.Transform(Vector3.UnitY, Rotation);
+            Up = Vector3.Transform(Vector3.UnitZ, Rotation);
+
+            Jumped = carState.Jumped.GetValueOrDefault(false);
+            DoubleJumped = carState.DoubleJumped.GetValueOrDefault(false);
+            HasWheelContact = false;// carState.HasWheelContact.GetValueOrDefault(false);
+
+            CanDodge = false;//car.CanDodge;
+            DodgeTimer = 0;// car.DodgeTimer;
+
+            IsSupersonic = false;// car.IsSupersonic;
+            IsDemolished = false;// car.IsDemolished;
+
+            Boost = (int)carState.Boost.GetValueOrDefault(0);
+
+            Name = name;
+            Team = team;
+        }
         #endregion
 
         #region Update
@@ -80,7 +110,10 @@ namespace KipjeBot
                     Velocity = car.Physics.Value.Velocity.Value.ToVector3();
 
                 if (car.Physics.Value.Rotation.HasValue)
+                {
                     Rotation = car.Physics.Value.Rotation.Value.ToQuaternion();
+                }
+                    
 
                 if (car.Physics.Value.AngularVelocity.HasValue)
                     AngularVelocity = car.Physics.Value.AngularVelocity.Value.ToVector3();
@@ -138,7 +171,10 @@ namespace KipjeBot
                     Velocity = car.State.Value.Velocity.Value.ToVector3();
 
                 if (car.State.Value.Rotation.HasValue)
+                {
                     Rotation = car.State.Value.Rotation.Value.ToQuaternion();
+                }
+                    
 
                 if (car.State.Value.AngularVelocity.HasValue)
                     AngularVelocity = car.State.Value.AngularVelocity.Value.ToVector3();

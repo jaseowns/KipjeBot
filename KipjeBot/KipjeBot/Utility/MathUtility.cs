@@ -17,6 +17,11 @@ namespace KipjeBot.Utility
             return Math.Min(Math.Max(min, value), max);
         }
 
+        public static float Clip(double value, float min, float max)
+        {
+            return Math.Min(Math.Max(min, (float)value), max);
+        }
+
         /// <summary>
         /// Linearly interpolates a value.
         /// </summary>
@@ -81,6 +86,32 @@ namespace KipjeBot.Utility
             float alpha = dot > (1 - 0.000001F) ? 0.0f : (float)Math.Acos(Math.Min(Math.Abs(dot), 1.0F)) * 2.0F;
 
             return alpha;
+        }
+
+        public static double DegreesToRadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
+        }
+
+        public static double Distance2D(Vector3 target, Vector3 agent)
+        {
+            var difference = target - agent;
+            return Math.Sqrt(Math.Pow(difference.X, 2) + Math.Pow(difference.Y, 2));
+        }
+
+        public static float Sign<T>(T x)
+        {
+            if (x.GetType() == typeof(int) || x.GetType() == typeof(float) || x.GetType() == typeof(double))
+            {
+                var check = Convert.ToDouble(x);
+                return (check <= 0) ? -1 : 1;
+            }
+            return 1;
+        }
+
+        public static float MultiplyVector3(Vector3 a, Vector3 b)
+        {
+            return (a.X * b.X + a.X * b.Y + a.Y * b.Y);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace KipjeBot
         public Vector3 Velocity { get; private set; }
         public Quaternion Rotation { get; private set; }
         public Vector3 AngularVelocity { get; private set; }
+        public object Location { get; internal set; }
 
         public void Update(rlbot.flat.BallInfo ball)
         {

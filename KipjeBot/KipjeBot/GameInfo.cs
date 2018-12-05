@@ -1,4 +1,10 @@
-﻿namespace KipjeBot
+﻿using KipjeBot.GameTickPacket;
+using KipjeBot.Helpers;
+using KipjeBot.Plays;
+using RLBotDotNet.GameState;
+using RLBotDotNet.Renderer;
+
+namespace KipjeBot
 {
     public class GameInfo
     {
@@ -21,6 +27,18 @@
         /// </summary>
         public bool IsRoundActive { get; private set; }
 
+        /// <summary>
+        /// Hold all the available plays
+        /// </summary>
+        public Playbook Playbook { get; private set; }
+
+        /// <summary>
+        /// Debug Renderer
+        /// </summary>
+        public Renderer Renderer { get; set; }
+
+        public FieldHelper FieldHelper { get; private set; }
+
         public Ball Ball { get; private set; } = new Ball();
         public Car[] Cars { get; private set; }
 
@@ -31,6 +49,43 @@
             this.index = index;
             this.team = team;
             this.name = name;
+            this.Playbook = new Playbook();
+            this.FieldHelper = new FieldHelper();
+        }
+
+        /// <summary>
+        /// Updates the GameInfo to reflect the faked GameTickPacket as State. 
+        /// </summary>
+        /// <param name="packet">The GameTickPacket object.</param>
+        public void Update(GameState gameState, CarState carState)
+        {
+            if (MyCar == null)
+                MyCar = new Car(carState, this.name, this.team);
+
+            /*if (packet.GameInfo.HasValue)
+            {
+                DeltaTime = packet.GameInfo.Value.SecondsElapsed - Time;
+                Time = packet.GameInfo.Value.SecondsElapsed;
+
+                IsRoundActive = packet.GameInfo.Value.IsRoundActive;
+            }
+
+            if (packet.Ball.HasValue)
+                Ball.Update(packet.Ball.Value);
+
+            if (Cars == null || Cars.Length != packet.PlayersLength)
+                Cars = new Car[packet.PlayersLength];
+
+            for (int i = 0; i < packet.PlayersLength; i++)
+            {
+                if (Cars[i] == null)
+                    Cars[i] = new Car();
+
+                if (packet.Players(i).HasValue)
+                    Cars[i].Update(packet.Players(i).Value, DeltaTime);
+            }
+
+            MyCar = Cars[index];*/
         }
 
         /// <summary>
@@ -63,6 +118,17 @@
             }
 
             MyCar = Cars[index];
+        }
+
+        /// <summary>
+        /// Reset the timer
+        /// </summary>
+        public void Update(IPlay play)
+        {
+            if (play.Expired)
+            {
+                Time = 0;
+            }
         }
 
         /// <summary>
